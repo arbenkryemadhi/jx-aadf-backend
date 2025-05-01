@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS proposal (
     proposal_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     tender_id INT NOT NULL,
     author_id TEXT NOT NULL,
+    title TEXT NOT NULL,
     description TEXT NOT NULL,
     price TEXT NOT NULL,
     status TEXT NOT NULL,
