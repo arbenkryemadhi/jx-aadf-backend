@@ -14,7 +14,7 @@ INSERT INTO staff (email)
 VALUES ('arbenofc@gmail.com');
 
 CREATE TABLE IF NOT EXISTS tender (
-    tender_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tender_id INT   ALWAYS AS IDENTITY PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     status TEXT NOT NULL,
@@ -36,5 +36,16 @@ CREATE TABLE IF NOT EXISTS proposal (
     status TEXT NOT NULL,
     created_date TEXT NOT NULL,
     FOREIGN KEY (tender_id) REFERENCES tender(tender_id),
+    FOREIGN KEY (author_id) REFERENCES app_user(app_user_id)
+);
+
+CREATE TABLE IF NOT EXISTS proposal_review (
+    proposal_review_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    proposal_id INT NOT NULL,
+    author_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    created_date TEXT NOT NULL,
+    FOREIGN KEY (proposal_id) REFERENCES proposal(proposal_id),
     FOREIGN KEY (author_id) REFERENCES app_user(app_user_id)
 );
