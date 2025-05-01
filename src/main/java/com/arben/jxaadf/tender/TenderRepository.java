@@ -1,5 +1,6 @@
 package com.arben.jxaadf.tender;
 
+import java.util.List;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
@@ -28,6 +29,50 @@ public class TenderRepository {
 
         // Return the ID directly
         return tenderId;
+    }
+
+    public void endTender(int tenderId) {
+        String sql = "UPDATE tender SET status = 'Ended' WHERE tender_id = ?";
+        Integer numOfRowsAffected = jdbcClient.sql(sql).param(tenderId).update();
+    }
+
+    public List<Tender> getAllActiveTenders() {
+        String sql = "SELECT * FROM tender WHERE status = 'Active'";
+        return jdbcClient.sql(sql).query(Tender.class).list();
+    }
+
+    public void deleteTender(int tenderId) {
+        String sql = "DELETE FROM tender WHERE tender_id = ?";
+        Integer numOfRowsAffected = jdbcClient.sql(sql).param(tenderId).update();
+    }
+
+    public List<Tender> searchTenders(String searchTerm) {
+        String sql = "SELECT * FROM tender WHERE title ILIKE ? OR description ILIKE ?";
+        return jdbcClient.sql(sql).param("%" + searchTerm + "%").param("%" + searchTerm + "%")
+                .query(Tender.class).list();
+    }
+
+    public Tender getTenderById(int tenderId) {
+        String sql = "SELECT * FROM tender WHERE tender_id = ?";
+        return jdbcClient.sql(sql).param(tenderId).query(Tender.class).single();
+    }
+
+    public void updateTender(Tender tender) {
+        String sql =
+                """
+                        UPDATE tender
+                        SET title = ?, description = ?, status = ?, author = ?, created_date = ?, deadline = ?, budget = ?
+                        WHERE tender_id = ?
+                        """;
+        jdbcClient.sql(sql).param(tender.getTitle()).param(tender.getDescription())
+                .param(tender.getStatus()).param(tender.getAuthor()).param(tender.getCreatedDate())
+                .param(tender.getDeadline()).param(tender.getBudget()).param(tender.getTenderId())
+                .update();
+    }
+
+    public void makeWinner(int tenderId, int proposalId) {
+        String sql = "UPDATE tender SET winning_proposal_id = ? WHERE tender_id = ?";
+        jdbcClient.sql(sql).param(proposalId).param(tenderId).update();
     }
 
 }

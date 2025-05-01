@@ -21,5 +21,6 @@ CREATE TABLE IF NOT EXISTS tender (
     author TEXT NOT NULL,
     created_date TEXT NOT NULL,
     deadline TEXT NOT NULL,
-    budget TEXT NOT NULL
+    budget TEXT NOT NULL,
+    winning_proposal_id INT
 );
