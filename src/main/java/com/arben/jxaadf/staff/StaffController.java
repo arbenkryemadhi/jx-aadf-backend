@@ -18,7 +18,7 @@ public class StaffController {
         this.staffRepository = staffRepository;
     }
 
-    @GetMapping("/api/isaadfstaff")
+    @GetMapping("/isaadfstaff")
     public boolean isStaff(@RequestParam String email) {
         return staffRepository.isStaff(email);
     }
