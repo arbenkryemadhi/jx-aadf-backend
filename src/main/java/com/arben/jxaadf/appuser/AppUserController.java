@@ -1,13 +1,13 @@
 package com.arben.jxaadf.appuser;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-@Controller
+@RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/appuser")
 public class AppUserController {
