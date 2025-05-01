@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS staff (
     email TEXT NOT NULL
 );
 INSERT INTO staff (email)
-VALUES ('');
+VALUES ('arbenofc@gmail.com');
