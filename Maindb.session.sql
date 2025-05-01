@@ -14,7 +14,7 @@ INSERT INTO staff (email)
 VALUES ('arbenofc@gmail.com');
 
 CREATE TABLE IF NOT EXISTS tender (
-    tender_id INT   ALWAYS AS IDENTITY PRIMARY KEY,
+    tender_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     status TEXT NOT NULL,
