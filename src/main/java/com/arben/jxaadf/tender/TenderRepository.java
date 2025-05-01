@@ -34,7 +34,7 @@ public class TenderRepository {
 
     public void endTender(int tenderId) {
         String sql = "UPDATE tender SET status = 'Ended' WHERE tender_id = ?";
-        Integer numOfRowsAffected = jdbcClient.sql(sql).param(tenderId).update();
+        jdbcClient.sql(sql).param(tenderId).update();
     }
 
     public List<Tender> getAllActiveTenders() {
@@ -44,7 +44,7 @@ public class TenderRepository {
 
     public void deleteTender(int tenderId) {
         String sql = "DELETE FROM tender WHERE tender_id = ?";
-        Integer numOfRowsAffected = jdbcClient.sql(sql).param(tenderId).update();
+        jdbcClient.sql(sql).param(tenderId).update();
     }
 
     public List<Tender> searchTenders(String searchTerm) {
