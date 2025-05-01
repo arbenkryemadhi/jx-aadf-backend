@@ -20,20 +20,20 @@ public class TenderTest {
         String title = "Test Tender";
         String description = "Tender Description";
         String status = "Active";
-        String author = "test@example.com";
+        String authorId = "test@example.com";
         String createdDate = "2025-05-01";
         String deadline = "2025-06-01";
         String budget = "10000 EUR";
 
         // Act
         Tender tender =
-                new Tender(title, description, status, author, createdDate, deadline, budget);
+                new Tender(title, description, status, authorId, createdDate, deadline, budget);
 
         // Assert
         assertEquals(title, tender.getTitle());
         assertEquals(description, tender.getDescription());
         assertEquals(status, tender.getStatus());
-        assertEquals(author, tender.getAuthor());
+        assertEquals(authorId, tender.getAuthorId());
         assertEquals(createdDate, tender.getCreatedDate());
         assertEquals(deadline, tender.getDeadline());
         assertEquals(budget, tender.getBudget());
@@ -46,13 +46,13 @@ public class TenderTest {
         String title = "Test Tender";
         String description = "Tender Description";
         String status = "Active";
-        String author = "test@example.com";
+        String authorId = "test@example.com";
         String createdDate = "2025-05-01";
         String deadline = "2025-06-01";
         String budget = "10000 EUR";
 
         // Act
-        Tender tender = new Tender(tenderId, title, description, status, author, createdDate,
+        Tender tender = new Tender(tenderId, title, description, status, authorId, createdDate,
                 deadline, budget);
 
         // Assert
@@ -60,7 +60,7 @@ public class TenderTest {
         assertEquals(title, tender.getTitle());
         assertEquals(description, tender.getDescription());
         assertEquals(status, tender.getStatus());
-        assertEquals(author, tender.getAuthor());
+        assertEquals(authorId, tender.getAuthorId());
         assertEquals(createdDate, tender.getCreatedDate());
         assertEquals(deadline, tender.getDeadline());
         assertEquals(budget, tender.getBudget());
@@ -74,7 +74,7 @@ public class TenderTest {
         String title = "Test Tender";
         String description = "Tender Description";
         String status = "Active";
-        String author = "test@example.com";
+        String authorId = "test@example.com";
         String createdDate = "2025-05-01";
         String deadline = "2025-06-01";
         String budget = "10000 EUR";
@@ -84,7 +84,7 @@ public class TenderTest {
         tender.setTitle(title);
         tender.setDescription(description);
         tender.setStatus(status);
-        tender.setAuthor(author);
+        tender.setAuthorId(authorId);
         tender.setCreatedDate(createdDate);
         tender.setDeadline(deadline);
         tender.setBudget(budget);
@@ -94,7 +94,7 @@ public class TenderTest {
         assertEquals(title, tender.getTitle());
         assertEquals(description, tender.getDescription());
         assertEquals(status, tender.getStatus());
-        assertEquals(author, tender.getAuthor());
+        assertEquals(authorId, tender.getAuthorId());
         assertEquals(createdDate, tender.getCreatedDate());
         assertEquals(deadline, tender.getDeadline());
         assertEquals(budget, tender.getBudget());

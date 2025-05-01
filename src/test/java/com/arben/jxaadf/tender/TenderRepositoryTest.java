@@ -159,6 +159,7 @@ public class TenderRepositoryTest {
             assertTrue(capturedSql.contains("SET title = ?"));
             assertTrue(capturedSql.contains("description = ?"));
             assertTrue(capturedSql.contains("status = ?"));
+            assertTrue(capturedSql.contains("author_id = ?"));
             assertTrue(capturedSql.contains("WHERE tender_id = ?"));
         }
     }
@@ -199,6 +200,7 @@ public class TenderRepositoryTest {
 
         // Verify that we have the expected SQL statements
         assertTrue(capturedQueries.stream().anyMatch(sql -> sql.contains("INSERT INTO tender")));
+        assertTrue(capturedQueries.stream().anyMatch(sql -> sql.contains("author_id")));
         assertTrue(capturedQueries.stream()
                 .anyMatch(sql -> sql.contains("UPDATE tender SET status = 'Ended'")));
         assertTrue(capturedQueries.stream()

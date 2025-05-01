@@ -5,31 +5,31 @@ public class Tender {
     private String title;
     private String description;
     private String status; // Active / Ended
-    private String author;
+    private String authorId; // ID of the user who created the tender
     private String createdDate;
     private String deadline;
     private String budget;
 
     public Tender() {}
 
-    public Tender(String title, String description, String status, String author,
+    public Tender(String title, String description, String status, String authorId,
             String createdDate, String deadline, String budget) {
         this.title = title;
         this.description = description;
         this.status = status;
-        this.author = author;
+        this.authorId = authorId;
         this.createdDate = createdDate;
         this.deadline = deadline;
         this.budget = budget;
     }
 
-    public Tender(int tenderId, String title, String description, String status, String author,
+    public Tender(int tenderId, String title, String description, String status, String authorId,
             String createdDate, String deadline, String budget) {
         this.tenderId = tenderId;
         this.title = title;
         this.description = description;
         this.status = status;
-        this.author = author;
+        this.authorId = authorId;
         this.createdDate = createdDate;
         this.deadline = deadline;
         this.budget = budget;
@@ -68,12 +68,12 @@ public class Tender {
         this.status = status;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setAuthorId(String authorId) {
+        this.authorId = authorId;
     }
 
     public String getCreatedDate() {

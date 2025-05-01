@@ -16,16 +16,17 @@ public class TenderRepository {
     public int createTender(Tender tender) {
         String sql =
                 """
-                        INSERT INTO tender (title, description, status, author, created_date, deadline, budget)
+                        INSERT INTO tender (title, description, status, author_id, created_date, deadline, budget)
                         VALUES (?, ?, ?, ?, ?, ?, ?)
                         RETURNING tender_id
                         """;
 
         // Execute the SQL and get the generated ID
-        Integer tenderId = jdbcClient.sql(sql).param(tender.getTitle())
-                .param(tender.getDescription()).param(tender.getStatus()).param(tender.getAuthor())
-                .param(tender.getCreatedDate()).param(tender.getDeadline())
-                .param(tender.getBudget()).query(Integer.class).single();
+        Integer tenderId =
+                jdbcClient.sql(sql).param(tender.getTitle()).param(tender.getDescription())
+                        .param(tender.getStatus()).param(tender.getAuthorId())
+                        .param(tender.getCreatedDate()).param(tender.getDeadline())
+                        .param(tender.getBudget()).query(Integer.class).single();
 
         // Return the ID directly
         return tenderId;
@@ -61,13 +62,13 @@ public class TenderRepository {
         String sql =
                 """
                         UPDATE tender
-                        SET title = ?, description = ?, status = ?, author = ?, created_date = ?, deadline = ?, budget = ?
+                        SET title = ?, description = ?, status = ?, author_id = ?, created_date = ?, deadline = ?, budget = ?
                         WHERE tender_id = ?
                         """;
         jdbcClient.sql(sql).param(tender.getTitle()).param(tender.getDescription())
-                .param(tender.getStatus()).param(tender.getAuthor()).param(tender.getCreatedDate())
-                .param(tender.getDeadline()).param(tender.getBudget()).param(tender.getTenderId())
-                .update();
+                .param(tender.getStatus()).param(tender.getAuthorId())
+                .param(tender.getCreatedDate()).param(tender.getDeadline())
+                .param(tender.getBudget()).param(tender.getTenderId()).update();
     }
 
     public void makeWinner(int tenderId, int proposalId) {

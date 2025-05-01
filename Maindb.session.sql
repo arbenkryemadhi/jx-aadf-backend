@@ -18,9 +18,22 @@ CREATE TABLE IF NOT EXISTS tender (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     status TEXT NOT NULL,
-    author TEXT NOT NULL,
+    author_id TEXT NOT NULL,
     created_date TEXT NOT NULL,
     deadline TEXT NOT NULL,
     budget TEXT NOT NULL,
-    winning_proposal_id INT
+    winning_proposal_id INT,
+    FOREIGN KEY (author_id) REFERENCES app_user(app_user_id)
+);
+
+CREATE TABLE IF NOT EXISTS proposal (
+    proposal_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    tender_id INT NOT NULL,
+    author_id TEXT NOT NULL,
+    description TEXT NOT NULL,
+    price TEXT NOT NULL,
+    status TEXT NOT NULL,
+    created_date TEXT NOT NULL,
+    FOREIGN KEY (tender_id) REFERENCES tender(tender_id),
+    FOREIGN KEY (author_id) REFERENCES app_user(app_user_id)
 );
