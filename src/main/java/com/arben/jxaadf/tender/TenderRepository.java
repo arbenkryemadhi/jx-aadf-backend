@@ -114,4 +114,11 @@ public class TenderRepository {
         String sql = "SELECT * FROM tender";
         return jdbcClient.sql(sql).query(tenderRowMapper).list();
     }
+
+
+    public void addLink(int tenderId, String link) {
+        String sql =
+                "UPDATE tender SET document_links = array_append(document_links, ?) WHERE tender_id = ?";
+        jdbcClient.sql(sql).param(link).param(tenderId).update();
+    }
 }

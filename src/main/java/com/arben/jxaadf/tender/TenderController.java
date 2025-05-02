@@ -68,4 +68,9 @@ public class TenderController {
         return tenderRepository.getAllTenders();
     }
 
+    @PutMapping("/addlink")
+    public void addLink(@RequestHeader(value = "tenderId") int tenderId, @RequestBody String link) {
+        tenderRepository.addLink(tenderId, link);
+    }
+
 }
