@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS app_user (
 
 CREATE TABLE IF NOT EXISTS staff (
     staff_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    staff_email TEXT NOT NULL,
-    admin_email TEXT NOT NULL
+    staff_email TEXT,
+    admin_email TEXT
 );
 
 INSERT INTO staff (staff_email)
