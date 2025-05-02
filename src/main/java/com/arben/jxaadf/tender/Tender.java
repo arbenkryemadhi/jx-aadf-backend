@@ -10,8 +10,7 @@ public class Tender {
     private String deadline;
     private String budget;
 
-    public Tender() {
-    }
+    public Tender() {}
 
     public Tender(String title, String description, String status, String authorId,
             String createdDate, String deadline, String budget) {
