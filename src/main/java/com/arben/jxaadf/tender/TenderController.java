@@ -80,7 +80,7 @@ public class TenderController {
         tenderRepository.addStaffToTender(tenderId, staffId);
     }
 
-    @PutMapping("/removsestaff")
+    @PutMapping("/removestaff")
     public void removeStaffFromTender(@RequestHeader(value = "tenderId") int tenderId,
             @RequestHeader(value = "staffId") String staffId) {
         tenderRepository.removeStaffFromTender(tenderId, staffId);
