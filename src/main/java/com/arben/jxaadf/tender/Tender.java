@@ -1,7 +1,7 @@
 package com.arben.jxaadf.tender;
 
 public class Tender {
-    private int tenderId;
+    private int tenderId; // Nuk duhet
     private String title;
     private String description;
     private String status; // Active / Ended
@@ -10,7 +10,8 @@ public class Tender {
     private String deadline;
     private String budget;
 
-    public Tender() {}
+    public Tender() {
+    }
 
     public Tender(String title, String description, String status, String authorId,
             String createdDate, String deadline, String budget) {
@@ -34,7 +35,6 @@ public class Tender {
         this.deadline = deadline;
         this.budget = budget;
     }
-
 
     public int getTenderId() {
         return tenderId;
