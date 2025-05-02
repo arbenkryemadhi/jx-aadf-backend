@@ -81,5 +81,4 @@ public class TenderRepository {
         return jdbcClient.sql(sql).query(Tender.class).list();
     }
 
-
 }
