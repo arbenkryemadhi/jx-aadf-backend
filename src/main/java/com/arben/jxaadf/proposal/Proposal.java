@@ -1,5 +1,8 @@
 package com.arben.jxaadf.proposal;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Proposal {
     private int proposalId; // DO NOT SEND
     private int tenderId; // ID of the tender this proposal is associated with
@@ -9,9 +12,12 @@ public class Proposal {
     private String price;
     private String status; // Accepted / Pending / Rejected
     private String createdDate;
+    private List<String> documentLinks; // Links to documents related to the proposal
 
 
-    public Proposal() {}
+    public Proposal() {
+        this.documentLinks = new ArrayList<>();
+    }
 
     public Proposal(int tenderId, String authorId, String title, String description, String price,
             String status, String createdDate) {
@@ -22,6 +28,7 @@ public class Proposal {
         this.price = price;
         this.status = status;
         this.createdDate = createdDate;
+        this.documentLinks = new ArrayList<>();
     }
 
     public Proposal(int proposalId, int tenderId, String authorId, String title, String description,
@@ -34,6 +41,20 @@ public class Proposal {
         this.price = price;
         this.status = status;
         this.createdDate = createdDate;
+        this.documentLinks = new ArrayList<>();
+    }
+
+    public Proposal(int proposalId, int tenderId, String authorId, String title, String description,
+            String price, String status, String createdDate, List<String> documentLinks) {
+        this.proposalId = proposalId;
+        this.tenderId = tenderId;
+        this.authorId = authorId;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.status = status;
+        this.createdDate = createdDate;
+        this.documentLinks = documentLinks != null ? documentLinks : new ArrayList<>();
     }
 
     public int getProposalId() {
@@ -98,5 +119,28 @@ public class Proposal {
 
     public void setCreatedDate(String createdDate) {
         this.createdDate = createdDate;
+    }
+
+    public List<String> getDocumentLinks() {
+        return documentLinks;
+    }
+
+    public void setDocumentLinks(List<String> documentLinks) {
+        this.documentLinks = documentLinks != null ? documentLinks : new ArrayList<>();
+    }
+
+    public void addDocumentLink(String documentLink) {
+        if (this.documentLinks == null) {
+            this.documentLinks = new ArrayList<>();
+        }
+        if (documentLink != null && !documentLink.isEmpty()) {
+            this.documentLinks.add(documentLink);
+        }
+    }
+
+    public void removeDocumentLink(String documentLink) {
+        if (this.documentLinks != null) {
+            this.documentLinks.remove(documentLink);
+        }
     }
 }

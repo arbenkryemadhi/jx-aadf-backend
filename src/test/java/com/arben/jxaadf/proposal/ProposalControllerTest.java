@@ -36,9 +36,39 @@ public class ProposalControllerTest {
         void setUp() {
                 testProposal = new Proposal(1, 1, "test@example.com", "Test Proposal",
                                 "Proposal Description", "5000 EUR", "Pending", "2025-05-01");
+                testProposal.setDocumentLinks(Arrays.asList("http://example.com/doc1",
+                                "http://example.com/doc2"));
         }
 
+        @Test
+        void createProposal_ShouldCreateProposalWithDocumentLinks() throws Exception {
+                // Arrange
+                when(proposalRepository.createProposal(any(Proposal.class)))
+                                .thenReturn("Proposal created successfully");
 
+                // Act & Assert
+                mockMvc.perform(post("/api/proposal/create").contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(testProposal)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("Proposal created successfully"));
+
+                verify(proposalRepository, times(1)).createProposal(any(Proposal.class));
+        }
+
+        @Test
+        void updateProposal_ShouldUpdateProposalWithDocumentLinks() throws Exception {
+                // Arrange
+                when(proposalRepository.updateProposal(any(Proposal.class)))
+                                .thenReturn("Proposal updated successfully");
+
+                // Act & Assert
+                mockMvc.perform(put("/api/proposal/update").contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(testProposal)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("Proposal updated successfully"));
+
+                verify(proposalRepository, times(1)).updateProposal(any(Proposal.class));
+        }
 
         @Test
         void deleteProposal_ShouldDeleteProposal() throws Exception {
@@ -98,7 +128,12 @@ public class ProposalControllerTest {
                                                 .value(testProposal.getProposalId()))
                                 .andExpect(jsonPath("$.title").value(testProposal.getTitle()))
                                 .andExpect(jsonPath("$.description")
-                                                .value(testProposal.getDescription()));
+                                                .value(testProposal.getDescription()))
+                                .andExpect(jsonPath("$.documentLinks").isArray())
+                                .andExpect(jsonPath("$.documentLinks[0]")
+                                                .value("http://example.com/doc1"))
+                                .andExpect(jsonPath("$.documentLinks[1]")
+                                                .value("http://example.com/doc2"));
 
                 verify(proposalRepository, times(1)).getProposalById(1);
         }
@@ -116,5 +151,73 @@ public class ProposalControllerTest {
                                 .andExpect(jsonPath("$").isEmpty());
 
                 verify(proposalRepository, times(1)).getAllUserProposals("nonexistent@example.com");
+        }
+
+        @Test
+        void addDocumentLink_ShouldAddLinkToProposal() throws Exception {
+                // Arrange
+                when(proposalRepository.addDocumentLink(anyInt(), anyString()))
+                                .thenReturn("Document link added successfully");
+
+                String link = "http://example.com/newdoc";
+
+                // Act & Assert
+                mockMvc.perform(put("/api/proposal/addlink").param("proposalId", "1")
+                                .contentType(MediaType.TEXT_PLAIN).content(link))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("Document link added successfully"));
+
+                verify(proposalRepository, times(1)).addDocumentLink(1, link);
+        }
+
+        @Test
+        void removeDocumentLink_ShouldRemoveLinkFromProposal() throws Exception {
+                // Arrange
+                when(proposalRepository.removeDocumentLink(anyInt(), anyString()))
+                                .thenReturn("Document link removed successfully");
+
+                String link = "http://example.com/doc1";
+
+                // Act & Assert
+                mockMvc.perform(put("/api/proposal/removelink").param("proposalId", "1")
+                                .contentType(MediaType.TEXT_PLAIN).content(link))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("Document link removed successfully"));
+
+                verify(proposalRepository, times(1)).removeDocumentLink(1, link);
+        }
+
+        @Test
+        void addDocumentLink_ProposalNotFound_ShouldReturnErrorMessage() throws Exception {
+                // Arrange
+                when(proposalRepository.addDocumentLink(anyInt(), anyString()))
+                                .thenReturn("Proposal not found");
+
+                String link = "http://example.com/newdoc";
+
+                // Act & Assert
+                mockMvc.perform(put("/api/proposal/addlink").param("proposalId", "999")
+                                .contentType(MediaType.TEXT_PLAIN).content(link))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("Proposal not found"));
+
+                verify(proposalRepository, times(1)).addDocumentLink(999, link);
+        }
+
+        @Test
+        void removeDocumentLink_LinkNotFound_ShouldReturnErrorMessage() throws Exception {
+                // Arrange
+                when(proposalRepository.removeDocumentLink(anyInt(), anyString()))
+                                .thenReturn("Proposal not found or link doesn't exist");
+
+                String link = "http://example.com/nonexistent";
+
+                // Act & Assert
+                mockMvc.perform(put("/api/proposal/removelink").param("proposalId", "1")
+                                .contentType(MediaType.TEXT_PLAIN).content(link))
+                                .andExpect(status().isOk()).andExpect(content().string(
+                                                "Proposal not found or link doesn't exist"));
+
+                verify(proposalRepository, times(1)).removeDocumentLink(1, link);
         }
 }

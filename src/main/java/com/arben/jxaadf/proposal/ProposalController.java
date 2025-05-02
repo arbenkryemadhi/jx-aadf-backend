@@ -53,4 +53,14 @@ public class ProposalController {
         return proposalRepository.getProposalById(proposalId);
     }
 
+    @PutMapping("/addlink")
+    public String addDocumentLink(@RequestParam int proposalId, @RequestBody String link) {
+        return proposalRepository.addDocumentLink(proposalId, link);
+    }
+
+    @PutMapping("/removelink")
+    public String removeDocumentLink(@RequestParam int proposalId, @RequestBody String link) {
+        return proposalRepository.removeDocumentLink(proposalId, link);
+    }
+
 }
