@@ -76,4 +76,10 @@ public class TenderRepository {
         jdbcClient.sql(sql).param(proposalId).param(tenderId).update();
     }
 
+    public List<Tender> getAllTenders() {
+        String sql = "SELECT * FROM tender";
+        return jdbcClient.sql(sql).query(Tender.class).list();
+    }
+
+
 }

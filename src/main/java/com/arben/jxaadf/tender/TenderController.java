@@ -63,4 +63,9 @@ public class TenderController {
         tenderRepository.makeWinner(tenderId, proposalId);
     }
 
+    @GetMapping("/getall")
+    public List<Tender> getAllTenders() {
+        return tenderRepository.getAllTenders();
+    }
+
 }
