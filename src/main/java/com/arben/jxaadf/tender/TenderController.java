@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
-
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/tender")
@@ -22,7 +21,6 @@ public class TenderController {
     public TenderController(TenderRepository tenderRepository) {
         this.tenderRepository = tenderRepository;
     }
-
 
     @PostMapping("/create")
     public int createTender(@RequestBody Tender tender) {

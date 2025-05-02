@@ -23,17 +23,17 @@ public class ProposalController {
     }
 
     @PostMapping("/create")
-    public String createProposal(Proposal proposal) {
+    public String createProposal(@RequestBody Proposal proposal) {
         return proposalRepository.createProposal(proposal);
     }
 
     @PutMapping("/update")
-    public String updateProposal(Proposal proposal) {
+    public String updateProposal(@RequestBody Proposal proposal) {
         return proposalRepository.updateProposal(proposal);
     }
 
     @DeleteMapping("/delete")
-    public String deleteProposal(int proposalId) {
+    public String deleteProposal(@RequestParam int proposalId) {
         return proposalRepository.deleteProposal(proposalId);
     }
 
