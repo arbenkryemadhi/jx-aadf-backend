@@ -14,7 +14,7 @@ public class StaffRepository {
 
     public boolean isStaff(String email) {
         String sql = "SELECT COUNT(*) FROM staff WHERE email = ?";
-        Integer count = jdbcClient.sql(sql).params(email).update();
+        Integer count = jdbcClient.sql(sql).params(email).query(Integer.class).single();
         return count != null && count > 0;
     }
 }
