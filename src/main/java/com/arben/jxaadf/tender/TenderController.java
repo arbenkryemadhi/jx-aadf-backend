@@ -29,7 +29,7 @@ public class TenderController {
     }
 
     @PutMapping("/end")
-    public void endTender(@RequestHeader(value = "tenderId") int tenderId) {
+    public void endTender(@RequestHeader int tenderId) {
         tenderRepository.endTender(tenderId);
     }
 
@@ -39,17 +39,17 @@ public class TenderController {
     }
 
     @DeleteMapping("/delete")
-    public void deleteTender(@RequestHeader(value = "tenderId") int tenderId) {
+    public void deleteTender(@RequestHeader int tenderId) {
         tenderRepository.deleteTender(tenderId);
     }
 
     @GetMapping("/search")
-    public List<Tender> searchTenders(@RequestHeader(value = "searchTerm") String searchTerm) {
+    public List<Tender> searchTenders(@RequestHeader String searchTerm) {
         return tenderRepository.searchTenders(searchTerm);
     }
 
     @GetMapping("/getbyid")
-    public Tender getTenderById(@RequestHeader(value = "tenderId") int tenderId) {
+    public Tender getTenderById(@RequestHeader int tenderId) {
         return tenderRepository.getTenderById(tenderId);
     }
 
@@ -59,7 +59,7 @@ public class TenderController {
     }
 
     @PutMapping("/makewinner")
-    public void makeWinner(@RequestHeader(value = "tenderId") int tenderId,
+    public void makeWinner(@RequestHeader int tenderId,
             @RequestHeader(value = "proposalId") int proposalId) {
         tenderRepository.makeWinner(tenderId, proposalId);
     }
@@ -70,19 +70,17 @@ public class TenderController {
     }
 
     @PutMapping("/addlink")
-    public void addLink(@RequestHeader(value = "tenderId") int tenderId, @RequestBody String link) {
+    public void addLink(@RequestHeader int tenderId, @RequestBody String link) {
         tenderRepository.addLink(tenderId, link);
     }
 
     @PutMapping("/addstaff")
-    public void addStaffToTender(@RequestHeader(value = "tenderId") int tenderId,
-            @RequestHeader(value = "staffId") String staffId) {
+    public void addStaffToTender(@RequestHeader int tenderId, @RequestHeader String staffId) {
         tenderRepository.addStaffToTender(tenderId, staffId);
     }
 
     @PutMapping("/removestaff")
-    public void removeStaffFromTender(@RequestHeader(value = "tenderId") int tenderId,
-            @RequestHeader(value = "staffId") String staffId) {
+    public void removeStaffFromTender(@RequestHeader int tenderId, @RequestHeader String staffId) {
         tenderRepository.removeStaffFromTender(tenderId, staffId);
     }
 
