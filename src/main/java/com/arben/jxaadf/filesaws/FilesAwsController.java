@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/files")
@@ -25,37 +22,27 @@ public class FilesAwsController {
     }
 
     @PostMapping(path = "/upload/pdf", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> uploadPdfFile(
-            @RequestParam("file") MultipartFile file) {
-        Map<String, Object> response = new HashMap<>();
-
+    public ResponseEntity<String> uploadPdfFile(@RequestParam("file") MultipartFile file) {
         try {
             // Validate that file is not empty
             if (file.isEmpty()) {
-                response.put("success", false);
-                response.put("message", "Please select a file to upload");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Please select a file to upload");
             }
 
             // Upload file to S3
             FilesAws uploadedFile = filesAwsRepository.uploadPdfFile(file);
 
-            // Create success response
-            response.put("success", true);
-            response.put("message", "File uploaded successfully");
-            response.put("file", uploadedFile);
+            // Return only the file URL as a string
+            return ResponseEntity.ok(uploadedFile.getFileUrl());
 
-            return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             // Handle invalid file format
-            response.put("success", false);
-            response.put("message", e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             // Handle other exceptions
-            response.put("success", false);
-            response.put("message", "Failed to upload file: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload file: " + e.getMessage());
         }
     }
 }
