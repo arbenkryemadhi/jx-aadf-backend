@@ -13,7 +13,14 @@ public class StaffRepository {
     }
 
     public boolean isStaff(String email) {
-        String sql = "SELECT COUNT(*) FROM staff WHERE email = ?";
+        String sql = "SELECT COUNT(*) FROM staff WHERE staff_email = ?";
+        Integer count = jdbcClient.sql(sql).params(email).query(Integer.class).single();
+        return count != null && count > 0;
+    }
+
+
+    public boolean isAdmin(String email) {
+        String sql = "SELECT COUNT(*) FROM staff WHERE admin_email = ?";
         Integer count = jdbcClient.sql(sql).params(email).query(Integer.class).single();
         return count != null && count > 0;
     }

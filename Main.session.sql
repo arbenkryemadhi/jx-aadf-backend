@@ -7,10 +7,11 @@ CREATE TABLE IF NOT EXISTS app_user (
 
 CREATE TABLE IF NOT EXISTS staff (
     staff_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    email TEXT NOT NULL
+    staff_email TEXT NOT NULL,
+    admin_email TEXT NOT NULL
 );
 
-INSERT INTO staff (email)
+INSERT INTO staff (staff_email)
 VALUES ('arbenofc@gmail.com');
 
 CREATE TABLE IF NOT EXISTS tender (

@@ -23,5 +23,10 @@ public class StaffController {
         return staffRepository.isStaff(email);
     }
 
+    @GetMapping("/isadmin")
+    public boolean isAdmin(@RequestParam String email) {
+        return staffRepository.isAdmin(email);
+    }
+
 
 }
