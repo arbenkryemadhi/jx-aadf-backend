@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS tender (
     budget TEXT NOT NULL,
     winning_proposal_id INT,
     document_links TEXT[] DEFAULT '{}',
+    assigned_aadf_staff TEXT[] DEFAULT '{}',
     FOREIGN KEY (author_id) REFERENCES app_user(app_user_id)
 );
 

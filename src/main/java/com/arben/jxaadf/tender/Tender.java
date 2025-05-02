@@ -12,10 +12,12 @@ public class Tender {
     private String createdDate;
     private String deadline;
     private String budget;
-    private List<String> documentLinks;
+    private List<String> documentLinks; // Links to documents related to the tender
+    private List<String> assignedAadfStaff; // IDs of AADF staff assigned to this tender
 
     public Tender() {
         this.documentLinks = new ArrayList<>();
+        this.assignedAadfStaff = new ArrayList<>();
     }
 
     public Tender(String title, String description, String status, String authorId,
@@ -28,6 +30,7 @@ public class Tender {
         this.deadline = deadline;
         this.budget = budget;
         this.documentLinks = new ArrayList<>();
+        this.assignedAadfStaff = new ArrayList<>();
     }
 
     public Tender(int tenderId, String title, String description, String status, String authorId,
@@ -41,6 +44,7 @@ public class Tender {
         this.deadline = deadline;
         this.budget = budget;
         this.documentLinks = new ArrayList<>();
+        this.assignedAadfStaff = new ArrayList<>();
     }
 
     public Tender(int tenderId, String title, String description, String status, String authorId,
@@ -54,6 +58,22 @@ public class Tender {
         this.deadline = deadline;
         this.budget = budget;
         this.documentLinks = documentLinks != null ? documentLinks : new ArrayList<>();
+        this.assignedAadfStaff = new ArrayList<>();
+    }
+
+    public Tender(int tenderId, String title, String description, String status, String authorId,
+            String createdDate, String deadline, String budget, List<String> documentLinks,
+            List<String> assignedAadfStaff) {
+        this.tenderId = tenderId;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.authorId = authorId;
+        this.createdDate = createdDate;
+        this.deadline = deadline;
+        this.budget = budget;
+        this.documentLinks = documentLinks != null ? documentLinks : new ArrayList<>();
+        this.assignedAadfStaff = assignedAadfStaff != null ? assignedAadfStaff : new ArrayList<>();
     }
 
     public int getTenderId() {
@@ -140,6 +160,29 @@ public class Tender {
     public void removeDocumentLink(String documentLink) {
         if (this.documentLinks != null) {
             this.documentLinks.remove(documentLink);
+        }
+    }
+
+    public List<String> getAssignedAadfStaff() {
+        return assignedAadfStaff;
+    }
+
+    public void setAssignedAadfStaff(List<String> assignedAadfStaff) {
+        this.assignedAadfStaff = assignedAadfStaff != null ? assignedAadfStaff : new ArrayList<>();
+    }
+
+    public void addAssignedAadfStaff(String staffId) {
+        if (this.assignedAadfStaff == null) {
+            this.assignedAadfStaff = new ArrayList<>();
+        }
+        if (staffId != null && !staffId.isEmpty() && !this.assignedAadfStaff.contains(staffId)) {
+            this.assignedAadfStaff.add(staffId);
+        }
+    }
+
+    public void removeAssignedAadfStaff(String staffId) {
+        if (this.assignedAadfStaff != null) {
+            this.assignedAadfStaff.remove(staffId);
         }
     }
 

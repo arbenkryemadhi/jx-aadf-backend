@@ -20,6 +20,8 @@ public class TenderTest {
         assertNotNull(tender.getDocumentLinks(),
                 "documentLinks should be initialized to empty list");
         assertTrue(tender.getDocumentLinks().isEmpty(), "documentLinks should be empty");
+        assertNotNull(tender.getAssignedAadfStaff());
+        assertTrue(tender.getAssignedAadfStaff().isEmpty());
     }
 
     @Test
@@ -30,7 +32,7 @@ public class TenderTest {
         String status = "Active";
         String authorId = "test@example.com";
         String createdDate = "2025-05-01";
-        String deadline = "2025-05-31";
+        String deadline = "2025-06-01";
         String budget = "10000 EUR";
 
         // Act
@@ -47,6 +49,8 @@ public class TenderTest {
         assertEquals(budget, tender.getBudget());
         assertNotNull(tender.getDocumentLinks(), "documentLinks should be initialized");
         assertTrue(tender.getDocumentLinks().isEmpty(), "documentLinks should be empty");
+        assertNotNull(tender.getAssignedAadfStaff());
+        assertTrue(tender.getAssignedAadfStaff().isEmpty());
     }
 
     @Test
@@ -58,7 +62,7 @@ public class TenderTest {
         String status = "Active";
         String authorId = "test@example.com";
         String createdDate = "2025-05-01";
-        String deadline = "2025-05-31";
+        String deadline = "2025-06-01";
         String budget = "10000 EUR";
 
         // Act
@@ -76,6 +80,8 @@ public class TenderTest {
         assertEquals(budget, tender.getBudget());
         assertNotNull(tender.getDocumentLinks(), "documentLinks should be initialized");
         assertTrue(tender.getDocumentLinks().isEmpty(), "documentLinks should be empty");
+        assertNotNull(tender.getAssignedAadfStaff());
+        assertTrue(tender.getAssignedAadfStaff().isEmpty());
     }
 
     @Test
@@ -87,7 +93,7 @@ public class TenderTest {
         String status = "Active";
         String authorId = "test@example.com";
         String createdDate = "2025-05-01";
-        String deadline = "2025-05-31";
+        String deadline = "2025-06-01";
         String budget = "10000 EUR";
         List<String> documentLinks =
                 Arrays.asList("http://example.com/doc1", "http://example.com/doc2");
@@ -107,6 +113,35 @@ public class TenderTest {
         assertEquals(budget, tender.getBudget());
         assertEquals(documentLinks, tender.getDocumentLinks());
         assertEquals(2, tender.getDocumentLinks().size());
+        assertNotNull(tender.getAssignedAadfStaff());
+        assertTrue(tender.getAssignedAadfStaff().isEmpty());
+    }
+
+    @Test
+    public void testConstructorWithDocumentLinksAndAssignedStaff() {
+        // Arrange
+        int tenderId = 1;
+        String title = "Test Tender";
+        String description = "Tender Description";
+        String status = "Active";
+        String authorId = "test@example.com";
+        String createdDate = "2025-05-01";
+        String deadline = "2025-06-01";
+        String budget = "10000 EUR";
+        List<String> documentLinks =
+                Arrays.asList("http://example.com/doc1", "http://example.com/doc2");
+        List<String> assignedAadfStaff = Arrays.asList("staff1@example.com", "staff2@example.com");
+
+        // Act
+        Tender tender = new Tender(tenderId, title, description, status, authorId, createdDate,
+                deadline, budget, documentLinks, assignedAadfStaff);
+
+        // Assert
+        assertEquals(tenderId, tender.getTenderId());
+        assertEquals(title, tender.getTitle());
+        assertEquals(documentLinks, tender.getDocumentLinks());
+        assertEquals(assignedAadfStaff, tender.getAssignedAadfStaff());
+        assertEquals(2, tender.getAssignedAadfStaff().size());
     }
 
     @Test
@@ -233,5 +268,76 @@ public class TenderTest {
         assertEquals(deadline, tender.getDeadline());
         assertEquals(budget, tender.getBudget());
         assertEquals(documentLinks, tender.getDocumentLinks());
+    }
+
+    @Test
+    public void testSetAndGetAssignedAadfStaff() {
+        // Arrange
+        Tender tender = new Tender();
+        List<String> assignedAadfStaff = Arrays.asList("staff1@example.com", "staff2@example.com");
+
+        // Act
+        tender.setAssignedAadfStaff(assignedAadfStaff);
+
+        // Assert
+        assertEquals(assignedAadfStaff, tender.getAssignedAadfStaff());
+        assertEquals(2, tender.getAssignedAadfStaff().size());
+    }
+
+    @Test
+    public void testAddAssignedAadfStaff() {
+        // Arrange
+        Tender tender = new Tender();
+        String staffId = "staff@example.com";
+
+        // Act
+        tender.addAssignedAadfStaff(staffId);
+
+        // Assert
+        assertTrue(tender.getAssignedAadfStaff().contains(staffId));
+        assertEquals(1, tender.getAssignedAadfStaff().size());
+    }
+
+    @Test
+    public void testAddDuplicateAssignedAadfStaff() {
+        // Arrange
+        Tender tender = new Tender();
+        String staffId = "staff@example.com";
+
+        // Act
+        tender.addAssignedAadfStaff(staffId);
+        tender.addAssignedAadfStaff(staffId); // Adding the same staff ID again
+
+        // Assert
+        assertTrue(tender.getAssignedAadfStaff().contains(staffId));
+        assertEquals(1, tender.getAssignedAadfStaff().size()); // Should still only have one entry
+    }
+
+    @Test
+    public void testRemoveAssignedAadfStaff() {
+        // Arrange
+        Tender tender = new Tender();
+        String staffId = "staff@example.com";
+        tender.addAssignedAadfStaff(staffId);
+
+        // Act
+        tender.removeAssignedAadfStaff(staffId);
+
+        // Assert
+        assertFalse(tender.getAssignedAadfStaff().contains(staffId));
+        assertEquals(0, tender.getAssignedAadfStaff().size());
+    }
+
+    @Test
+    public void testSetNullAssignedAadfStaff() {
+        // Arrange
+        Tender tender = new Tender();
+
+        // Act
+        tender.setAssignedAadfStaff(null);
+
+        // Assert
+        assertNotNull(tender.getAssignedAadfStaff());
+        assertTrue(tender.getAssignedAadfStaff().isEmpty());
     }
 }

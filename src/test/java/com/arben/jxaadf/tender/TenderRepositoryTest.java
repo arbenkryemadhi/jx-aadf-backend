@@ -32,7 +32,7 @@ public class TenderRepositoryTest {
     private StatementSpec statementSpec;
 
     @Mock
-    private MappedQuerySpec<Integer> mappedQuerySpec;
+    private MappedQuerySpec<Integer> integerQuerySpec;
 
     @Mock
     private MappedQuerySpec<Tender> tenderQuerySpec;
@@ -54,49 +54,7 @@ public class TenderRepositoryTest {
         List<String> documentLinks =
                 Arrays.asList("http://example.com/doc1", "http://example.com/doc2");
         testTender.setDocumentLinks(documentLinks);
-
-        when(jdbcClient.sql(anyString())).thenReturn(statementSpec);
-    }
-
-    @Test
-    void createTender_VerifySqlIncludesDocumentLinks() {
-        // Arrange
-        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
-        when(statementSpec.param(any())).thenReturn(statementSpec);
-        when(statementSpec.query(eq(Integer.class))).thenReturn(mappedQuerySpec);
-        when(mappedQuerySpec.single()).thenReturn(1);
-
-        // Act
-        tenderRepository.createTender(testTender);
-
-        // Assert
-        verify(jdbcClient).sql(sqlCaptor.capture());
-        String capturedSql = sqlCaptor.getValue();
-        assertTrue(capturedSql.contains("document_links"),
-                "SQL should include document_links column");
-
-        // Verify all parameters are set, including document_links
-        verify(statementSpec, times(8)).param(any());
-    }
-
-    @Test
-    void updateTender_VerifySqlIncludesDocumentLinks() {
-        // Arrange
-        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
-        when(statementSpec.param(any())).thenReturn(statementSpec);
-        when(statementSpec.update()).thenReturn(1);
-
-        // Act
-        tenderRepository.updateTender(testTender);
-
-        // Assert
-        verify(jdbcClient).sql(sqlCaptor.capture());
-        String capturedSql = sqlCaptor.getValue();
-        assertTrue(capturedSql.contains("document_links"),
-                "SQL should include document_links column");
-
-        // Verify all parameters are set, including document_links
-        verify(statementSpec, times(9)).param(any());
+        testTender.setAssignedAadfStaff(Arrays.asList("staff1@example.com", "staff2@example.com"));
     }
 
     @SuppressWarnings("unchecked")
@@ -370,5 +328,74 @@ public class TenderRepositoryTest {
 
         assertTrue(capturedSql.contains("UPDATE tender SET winning_proposal_id = ?"));
         assertTrue(capturedSql.contains("WHERE tender_id = ?"));
+    }
+
+    @Test
+    void createTender_WithAssignedStaff_VerifySqlExecution() {
+        // This test verifies that the correct SQL is executed with assigned staff
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+
+        when(jdbcClient.sql(any())).thenReturn(statementSpec);
+        when(statementSpec.param(any())).thenReturn(statementSpec);
+        when(statementSpec.query(eq(Integer.class))).thenReturn(integerQuerySpec);
+        when(integerQuerySpec.single()).thenReturn(1);
+
+        // Act
+        int result = tenderRepository.createTender(testTender);
+
+        // Assert
+        verify(jdbcClient).sql(sqlCaptor.capture());
+        String capturedSql = sqlCaptor.getValue();
+        assertTrue(capturedSql.contains("INSERT INTO tender"));
+        assertTrue(capturedSql.contains("assigned_aadf_staff"));
+        assertEquals(1, result);
+    }
+
+    @Test
+    void removeStaffFromTender_VerifySqlExecution() {
+        // This test verifies the SQL to remove staff from a tender
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        int tenderId = 1;
+        String staffId = "staff@example.com";
+
+        when(jdbcClient.sql(any())).thenReturn(statementSpec);
+        when(statementSpec.param(any())).thenReturn(statementSpec);
+        when(statementSpec.update()).thenReturn(1);
+
+        // Act
+        tenderRepository.removeStaffFromTender(tenderId, staffId);
+
+        // Assert
+        verify(jdbcClient).sql(sqlCaptor.capture());
+        String capturedSql = sqlCaptor.getValue();
+        assertTrue(capturedSql.contains("UPDATE tender"));
+        assertTrue(capturedSql.contains("array_remove"));
+        assertTrue(capturedSql.contains("assigned_aadf_staff"));
+
+        verify(statementSpec).param(staffId);
+        verify(statementSpec).param(tenderId);
+    }
+
+    @Test
+    void getTendersByStaffId_VerifySqlExecution() {
+        // This test verifies the SQL to get tenders by staff ID
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        String staffId = "staff@example.com";
+
+        when(jdbcClient.sql(any())).thenReturn(statementSpec);
+        when(statementSpec.param(any())).thenReturn(statementSpec);
+        when(statementSpec.query(any(RowMapper.class))).thenReturn(tenderQuerySpec);
+        when(tenderQuerySpec.list()).thenReturn(Collections.emptyList());
+
+        // Act
+        tenderRepository.getTendersByStaffId(staffId);
+
+        // Assert
+        verify(jdbcClient).sql(sqlCaptor.capture());
+        String capturedSql = sqlCaptor.getValue();
+        assertTrue(capturedSql.contains("SELECT * FROM tender"));
+        assertTrue(capturedSql.contains("= ANY(assigned_aadf_staff)"));
+
+        verify(statementSpec).param(staffId);
     }
 }

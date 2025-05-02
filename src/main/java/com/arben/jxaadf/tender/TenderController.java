@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -73,4 +74,20 @@ public class TenderController {
         tenderRepository.addLink(tenderId, link);
     }
 
+    @PutMapping("/addstaff")
+    public void addStaffToTender(@RequestHeader(value = "tenderId") int tenderId,
+            @RequestHeader(value = "staffId") String staffId) {
+        tenderRepository.addStaffToTender(tenderId, staffId);
+    }
+
+    @PutMapping("/removestaff")
+    public void removeStaffFromTender(@RequestHeader(value = "tenderId") int tenderId,
+            @RequestHeader(value = "staffId") String staffId) {
+        tenderRepository.removeStaffFromTender(tenderId, staffId);
+    }
+
+    @GetMapping("/getbystaff")
+    public List<Tender> getTendersByStaffId(@RequestParam String staffId) {
+        return tenderRepository.getTendersByStaffId(staffId);
+    }
 }

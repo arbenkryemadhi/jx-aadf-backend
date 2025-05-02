@@ -37,14 +37,27 @@ public class TenderRepository {
             tender.setDocumentLinks(new ArrayList<>());
         }
 
+        // Handle the assigned_aadf_staff array
+        Array assignedStaffArray = rs.getArray("assigned_aadf_staff");
+        if (assignedStaffArray != null) {
+            try {
+                String[] staffIds = (String[]) assignedStaffArray.getArray();
+                tender.setAssignedAadfStaff(Arrays.asList(staffIds));
+            } catch (SQLException e) {
+                tender.setAssignedAadfStaff(new ArrayList<>());
+            }
+        } else {
+            tender.setAssignedAadfStaff(new ArrayList<>());
+        }
+
         return tender;
     };
 
     public int createTender(Tender tender) {
         String sql =
                 """
-                        INSERT INTO tender (title, description, status, author_id, created_date, deadline, budget, document_links)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        INSERT INTO tender (title, description, status, author_id, created_date, deadline, budget, document_links, assigned_aadf_staff)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                         RETURNING tender_id
                         """;
 
@@ -56,6 +69,10 @@ public class TenderRepository {
                 .param(tender.getDocumentLinks() != null && !tender.getDocumentLinks().isEmpty()
                         ? tender.getDocumentLinks().toArray(new String[0])
                         : null)
+                .param(tender.getAssignedAadfStaff() != null
+                        && !tender.getAssignedAadfStaff().isEmpty()
+                                ? tender.getAssignedAadfStaff().toArray(new String[0])
+                                : null)
                 .query(Integer.class).single();
 
         // Return the ID directly
@@ -92,7 +109,7 @@ public class TenderRepository {
         String sql =
                 """
                         UPDATE tender
-                        SET title = ?, description = ?, status = ?, author_id = ?, created_date = ?, deadline = ?, budget = ?, document_links = ?
+                        SET title = ?, description = ?, status = ?, author_id = ?, created_date = ?, deadline = ?, budget = ?, document_links = ?, assigned_aadf_staff = ?
                         WHERE tender_id = ?
                         """;
         jdbcClient.sql(sql).param(tender.getTitle()).param(tender.getDescription())
@@ -102,6 +119,10 @@ public class TenderRepository {
                 .param(tender.getDocumentLinks() != null && !tender.getDocumentLinks().isEmpty()
                         ? tender.getDocumentLinks().toArray(new String[0])
                         : null)
+                .param(tender.getAssignedAadfStaff() != null
+                        && !tender.getAssignedAadfStaff().isEmpty()
+                                ? tender.getAssignedAadfStaff().toArray(new String[0])
+                                : null)
                 .param(tender.getTenderId()).update();
     }
 
@@ -115,10 +136,26 @@ public class TenderRepository {
         return jdbcClient.sql(sql).query(tenderRowMapper).list();
     }
 
-
     public void addLink(int tenderId, String link) {
         String sql =
                 "UPDATE tender SET document_links = array_append(document_links, ?) WHERE tender_id = ?";
         jdbcClient.sql(sql).param(link).param(tenderId).update();
+    }
+
+    public void addStaffToTender(int tenderId, String staffId) {
+        String sql =
+                "UPDATE tender SET assigned_aadf_staff = array_append(assigned_aadf_staff, ?) WHERE tender_id = ?";
+        jdbcClient.sql(sql).param(staffId).param(tenderId).update();
+    }
+
+    public void removeStaffFromTender(int tenderId, String staffId) {
+        String sql =
+                "UPDATE tender SET assigned_aadf_staff = array_remove(assigned_aadf_staff, ?) WHERE tender_id = ?";
+        jdbcClient.sql(sql).param(staffId).param(tenderId).update();
+    }
+
+    public List<Tender> getTendersByStaffId(String staffId) {
+        String sql = "SELECT * FROM tender WHERE ? = ANY(assigned_aadf_staff)";
+        return jdbcClient.sql(sql).param(staffId).query(tenderRowMapper).list();
     }
 }
