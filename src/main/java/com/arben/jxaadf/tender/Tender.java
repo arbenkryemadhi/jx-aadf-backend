@@ -1,7 +1,7 @@
 package com.arben.jxaadf.tender;
 
 public class Tender {
-    private int tenderId; // Nuk duhet
+    private int tenderId; // DO NOT SEND
     private String title;
     private String description;
     private String status; // Active / Ended

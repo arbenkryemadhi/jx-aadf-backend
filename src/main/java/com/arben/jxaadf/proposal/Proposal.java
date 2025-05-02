@@ -1,7 +1,7 @@
 package com.arben.jxaadf.proposal;
 
 public class Proposal {
-    private int proposalId;
+    private int proposalId; // DO NOT SEND
     private int tenderId; // ID of the tender this proposal is associated with
     private String authorId; // ID of the user who created the proposal
     private String title;
