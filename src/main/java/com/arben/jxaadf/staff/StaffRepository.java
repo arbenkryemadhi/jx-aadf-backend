@@ -1,5 +1,6 @@
 package com.arben.jxaadf.staff;
 
+import java.util.List;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +35,11 @@ public class StaffRepository {
     public void removeStaff(String email) {
         String sql = "DELETE FROM staff WHERE staff_email = ?";
         jdbcClient.sql(sql).params(email).update();
+    }
+
+
+    public List<String> getAllStaffEmails() {
+        String sql = "SELECT staff_email FROM staff WHERE staff_email IS NOT NULL";
+        return jdbcClient.sql(sql).query(String.class).list();
     }
 }
