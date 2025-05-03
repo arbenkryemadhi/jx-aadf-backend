@@ -24,4 +24,9 @@ public class StaffRepository {
         Integer count = jdbcClient.sql(sql).params(email).query(Integer.class).single();
         return count != null && count > 0;
     }
+
+    public void createStaff(String email) {
+        String sql = "INSERT INTO staff (staff_email) VALUES (?)";
+        jdbcClient.sql(sql).params(email).update();
+    }
 }

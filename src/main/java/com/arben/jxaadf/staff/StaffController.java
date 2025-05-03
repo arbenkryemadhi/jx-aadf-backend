@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -26,6 +27,12 @@ public class StaffController {
     @GetMapping("/isadmin")
     public boolean isAdmin(@RequestParam String email) {
         return staffRepository.isAdmin(email);
+    }
+
+
+    @PostMapping("/createstaff")
+    public void createStaff(@RequestParam String email) {
+        staffRepository.createStaff(email);
     }
 
 
