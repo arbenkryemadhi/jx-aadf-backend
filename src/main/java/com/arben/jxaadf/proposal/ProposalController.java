@@ -63,7 +63,7 @@ public class ProposalController {
         return proposalRepository.removeDocumentLink(proposalId, link);
     }
 
-    @GetMapping("/averagescrore")
+    @GetMapping("/averagescore")
     public double getAverageScore(@RequestParam int proposalId) {
         return proposalRepository.getAverageScore(proposalId);
     }
