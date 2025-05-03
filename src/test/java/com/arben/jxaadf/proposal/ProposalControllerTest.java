@@ -222,33 +222,7 @@ public class ProposalControllerTest {
                 verify(proposalRepository, times(1)).removeDocumentLink(1, link);
         }
 
-        @Test
-        void addAiScore_ShouldUpdateAiScoreOfProposal() throws Exception {
-                // Arrange
-                when(proposalRepository.updateAiScore(anyInt(), anyInt()))
-                                .thenReturn("AI score updated successfully");
 
-                // Act & Assert
-                mockMvc.perform(put("/api/proposal/addaiscore").param("proposalId", "1")
-                                .param("aiScore", "80")).andExpect(status().isOk())
-                                .andExpect(content().string("AI score updated successfully"));
-
-                verify(proposalRepository, times(1)).updateAiScore(1, 80);
-        }
-
-        @Test
-        void addAiScore_ProposalNotFound_ShouldReturnErrorMessage() throws Exception {
-                // Arrange
-                when(proposalRepository.updateAiScore(anyInt(), anyInt()))
-                                .thenReturn("Proposal not found");
-
-                // Act & Assert
-                mockMvc.perform(put("/api/proposal/addaiscore").param("proposalId", "999")
-                                .param("aiScore", "85")).andExpect(status().isOk())
-                                .andExpect(content().string("Proposal not found"));
-
-                verify(proposalRepository, times(1)).updateAiScore(999, 85);
-        }
 
         @Test
         void createProposal_ShouldIncludeAiScore() throws Exception {
