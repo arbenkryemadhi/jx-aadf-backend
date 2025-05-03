@@ -1,7 +1,7 @@
 package com.arben.jxaadf.proposalreview;
 
 public class ProposalReview {
-    private int proposalReviewId;
+    private int proposalReviewId; // DO NOT SEND
     private int proposalId;
     private String authorId;
     private String title;
