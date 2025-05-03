@@ -88,6 +88,9 @@ public class TenderController {
         return tenderRepository.getTendersByStaffId(staffId);
     }
 
+
+    // DASHBOARD
+
     @GetMapping("/totatenderslvalue")
     public Double getTotalTendersValue() {
         return tenderRepository.getTotalTendersValue();
