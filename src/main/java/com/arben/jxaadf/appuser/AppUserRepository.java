@@ -29,4 +29,9 @@ public class AppUserRepository {
         Assert.state(noOfRowsAffected == 1, "Delete failed, no rows affected.");
     }
 
+    public String getIdFromEmail(String email) {
+        String sql = "SELECT app_user_id FROM app_user WHERE email = ?";
+        return jdbcClient.sql(sql).param(email).query(String.class).single();
+    }
+
 }
