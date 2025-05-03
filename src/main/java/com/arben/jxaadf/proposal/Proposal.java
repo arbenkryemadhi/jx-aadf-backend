@@ -13,10 +13,12 @@ public class Proposal {
     private String status; // Accepted / Pending / Rejected
     private String createdDate;
     private List<String> documentLinks; // Links to documents related to the proposal
+    private int aiScore; // AI score for the proposal
 
 
     public Proposal() {
         this.documentLinks = new ArrayList<>();
+        this.aiScore = 0;
     }
 
     public Proposal(int tenderId, String authorId, String title, String description, String price,
@@ -29,6 +31,7 @@ public class Proposal {
         this.status = status;
         this.createdDate = createdDate;
         this.documentLinks = new ArrayList<>();
+        this.aiScore = 0;
     }
 
     public Proposal(int proposalId, int tenderId, String authorId, String title, String description,
@@ -42,6 +45,7 @@ public class Proposal {
         this.status = status;
         this.createdDate = createdDate;
         this.documentLinks = new ArrayList<>();
+        this.aiScore = 0;
     }
 
     public Proposal(int proposalId, int tenderId, String authorId, String title, String description,
@@ -55,6 +59,22 @@ public class Proposal {
         this.status = status;
         this.createdDate = createdDate;
         this.documentLinks = documentLinks != null ? documentLinks : new ArrayList<>();
+        this.aiScore = 0;
+    }
+
+    public Proposal(int proposalId, int tenderId, String authorId, String title, String description,
+            String price, String status, String createdDate, List<String> documentLinks,
+            int aiScore) {
+        this.proposalId = proposalId;
+        this.tenderId = tenderId;
+        this.authorId = authorId;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.status = status;
+        this.createdDate = createdDate;
+        this.documentLinks = documentLinks != null ? documentLinks : new ArrayList<>();
+        this.aiScore = aiScore;
     }
 
     public int getProposalId() {
@@ -142,5 +162,13 @@ public class Proposal {
         if (this.documentLinks != null) {
             this.documentLinks.remove(documentLink);
         }
+    }
+
+    public int getAiScore() {
+        return aiScore;
+    }
+
+    public void setAiScore(int aiScore) {
+        this.aiScore = aiScore;
     }
 }

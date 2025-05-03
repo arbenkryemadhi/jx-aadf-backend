@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS proposal (
     status TEXT NOT NULL,
     created_date TEXT NOT NULL,
     documents_links TEXT[] DEFAULT '{}',
+    ai_score INT DEFAULT 0,
     FOREIGN KEY (tender_id) REFERENCES tender(tender_id),
     FOREIGN KEY (author_id) REFERENCES app_user(app_user_id)
 );

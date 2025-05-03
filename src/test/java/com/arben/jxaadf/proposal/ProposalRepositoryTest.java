@@ -32,6 +32,7 @@ public class ProposalRepositoryTest {
                 "Proposal Description", "5000 EUR", "Pending", "2025-05-01");
         testProposal.setDocumentLinks(
                 Arrays.asList("http://example.com/doc1", "http://example.com/doc2"));
+        testProposal.setAiScore(85);
     }
 
     @Test
@@ -269,6 +270,58 @@ public class ProposalRepositoryTest {
         }
     }
 
+    @Test
+    void updateAiScore_VerifySqlExecution() {
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        int proposalId = 1;
+        int aiScore = 75;
+
+        try {
+            proposalRepository.updateAiScore(proposalId, aiScore);
+        } catch (NullPointerException e) {
+            verify(jdbcClient).sql(sqlCaptor.capture());
+            String capturedSql = sqlCaptor.getValue();
+
+            assertTrue(capturedSql.contains("UPDATE proposal SET"));
+            assertTrue(capturedSql.contains("ai_score = ?"));
+            assertTrue(capturedSql.contains("WHERE proposal_id = ?"));
+        }
+    }
+
+    @Test
+    void createProposal_WithAiScore_VerifySqlExecution() {
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        testProposal.setAiScore(90);
+
+        try {
+            proposalRepository.createProposal(testProposal);
+        } catch (NullPointerException e) {
+            verify(jdbcClient).sql(sqlCaptor.capture());
+            String capturedSql = sqlCaptor.getValue();
+
+            assertTrue(capturedSql.contains("INSERT INTO proposal"));
+            assertTrue(capturedSql.contains("ai_score"));
+            assertTrue(capturedSql.contains("VALUES"));
+        }
+    }
+
+    @Test
+    void updateProposal_WithAiScore_VerifySqlExecution() {
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        testProposal.setAiScore(88);
+
+        try {
+            proposalRepository.updateProposal(testProposal);
+        } catch (NullPointerException e) {
+            verify(jdbcClient).sql(sqlCaptor.capture());
+            String capturedSql = sqlCaptor.getValue();
+
+            assertTrue(capturedSql.contains("UPDATE proposal SET"));
+            assertTrue(capturedSql.contains("ai_score = ?"));
+            assertTrue(capturedSql.contains("WHERE proposal_id = ?"));
+        }
+    }
+
     private void executeAllRepositoryMethodsWithExceptionHandling() {
         try {
             proposalRepository.createProposal(testProposal);
@@ -301,6 +354,10 @@ public class ProposalRepositoryTest {
         }
         try {
             proposalRepository.removeDocumentLink(1, "http://example.com/doc");
+        } catch (Exception e) {
+        }
+        try {
+            proposalRepository.updateAiScore(1, 80);
         } catch (Exception e) {
         }
     }

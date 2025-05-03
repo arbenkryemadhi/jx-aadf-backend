@@ -63,4 +63,9 @@ public class ProposalController {
         return proposalRepository.removeDocumentLink(proposalId, link);
     }
 
+    @PutMapping("/addaiscore")
+    public String addAiScore(@RequestParam int proposalId, @RequestParam int aiScore) {
+        return proposalRepository.updateAiScore(proposalId, aiScore);
+    }
+
 }

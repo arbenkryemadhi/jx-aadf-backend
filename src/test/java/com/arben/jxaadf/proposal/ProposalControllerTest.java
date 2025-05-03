@@ -38,6 +38,7 @@ public class ProposalControllerTest {
                                 "Proposal Description", "5000 EUR", "Pending", "2025-05-01");
                 testProposal.setDocumentLinks(Arrays.asList("http://example.com/doc1",
                                 "http://example.com/doc2"));
+                testProposal.setAiScore(75);
         }
 
         @Test
@@ -219,5 +220,65 @@ public class ProposalControllerTest {
                                                 "Proposal not found or link doesn't exist"));
 
                 verify(proposalRepository, times(1)).removeDocumentLink(1, link);
+        }
+
+        @Test
+        void addAiScore_ShouldUpdateAiScoreOfProposal() throws Exception {
+                // Arrange
+                when(proposalRepository.updateAiScore(anyInt(), anyInt()))
+                                .thenReturn("AI score updated successfully");
+
+                // Act & Assert
+                mockMvc.perform(put("/api/proposal/addaiscore").param("proposalId", "1")
+                                .param("aiScore", "80")).andExpect(status().isOk())
+                                .andExpect(content().string("AI score updated successfully"));
+
+                verify(proposalRepository, times(1)).updateAiScore(1, 80);
+        }
+
+        @Test
+        void addAiScore_ProposalNotFound_ShouldReturnErrorMessage() throws Exception {
+                // Arrange
+                when(proposalRepository.updateAiScore(anyInt(), anyInt()))
+                                .thenReturn("Proposal not found");
+
+                // Act & Assert
+                mockMvc.perform(put("/api/proposal/addaiscore").param("proposalId", "999")
+                                .param("aiScore", "85")).andExpect(status().isOk())
+                                .andExpect(content().string("Proposal not found"));
+
+                verify(proposalRepository, times(1)).updateAiScore(999, 85);
+        }
+
+        @Test
+        void createProposal_ShouldIncludeAiScore() throws Exception {
+                // Arrange
+                when(proposalRepository.createProposal(any(Proposal.class)))
+                                .thenReturn("Proposal created successfully");
+
+                // Make sure the test proposal has a non-default AI score
+                testProposal.setAiScore(90);
+
+                // Act & Assert
+                mockMvc.perform(post("/api/proposal/create").contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(testProposal)))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("Proposal created successfully"));
+
+                verify(proposalRepository, times(1)).createProposal(any(Proposal.class));
+        }
+
+        @Test
+        void getProposalById_ShouldIncludeAiScore() throws Exception {
+                // Arrange
+                testProposal.setAiScore(88);
+                when(proposalRepository.getProposalById(anyInt())).thenReturn(testProposal);
+
+                // Act & Assert
+                mockMvc.perform(get("/api/proposal/getbyid").param("proposalId", "1"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.aiScore").value(88));
+
+                verify(proposalRepository, times(1)).getProposalById(1);
         }
 }

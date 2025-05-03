@@ -263,4 +263,58 @@ public class ProposalTest {
         assertEquals(1, proposal.getDocumentLinks().size());
         assertEquals(link1, proposal.getDocumentLinks().get(0));
     }
+
+    @Test
+    public void testAiScoreDefaultValue() {
+        // Act
+        Proposal proposal = new Proposal();
+
+        // Assert
+        assertEquals(0, proposal.getAiScore());
+    }
+
+    @Test
+    public void testSetAiScore() {
+        // Arrange
+        Proposal proposal = new Proposal();
+        int aiScore = 85;
+
+        // Act
+        proposal.setAiScore(aiScore);
+
+        // Assert
+        assertEquals(aiScore, proposal.getAiScore());
+    }
+
+    @Test
+    public void testConstructorWithAiScore() {
+        // Arrange
+        int proposalId = 1;
+        int tenderId = 1;
+        String authorId = "test@example.com";
+        String title = "Test Proposal";
+        String description = "Proposal Description";
+        String price = "5000 EUR";
+        String status = "Pending";
+        String createdDate = "2025-05-01";
+        List<String> documentLinks =
+                Arrays.asList("http://example.com/doc1", "http://example.com/doc2");
+        int aiScore = 95;
+
+        // Act
+        Proposal proposal = new Proposal(proposalId, tenderId, authorId, title, description, price,
+                status, createdDate, documentLinks, aiScore);
+
+        // Assert
+        assertEquals(proposalId, proposal.getProposalId());
+        assertEquals(tenderId, proposal.getTenderId());
+        assertEquals(authorId, proposal.getAuthorId());
+        assertEquals(title, proposal.getTitle());
+        assertEquals(description, proposal.getDescription());
+        assertEquals(price, proposal.getPrice());
+        assertEquals(status, proposal.getStatus());
+        assertEquals(createdDate, proposal.getCreatedDate());
+        assertEquals(documentLinks, proposal.getDocumentLinks());
+        assertEquals(aiScore, proposal.getAiScore());
+    }
 }

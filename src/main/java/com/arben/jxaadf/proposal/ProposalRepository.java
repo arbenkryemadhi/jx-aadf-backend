@@ -37,21 +37,25 @@ public class ProposalRepository {
             proposal.setDocumentLinks(new ArrayList<>());
         }
 
+        // Set the AI score
+        proposal.setAiScore(rs.getInt("ai_score"));
+
         return proposal;
     };
 
     public String createProposal(Proposal proposal) {
         try {
             jdbcClient.sql(
-                    "INSERT INTO proposal (tender_id, author_id, title, description, price, status, created_date, documents_links) "
-                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
+                    "INSERT INTO proposal (tender_id, author_id, title, description, price, status, created_date, documents_links, ai_score) "
+                            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
                     .params(proposal.getTenderId(), proposal.getAuthorId(), proposal.getTitle(),
                             proposal.getDescription(), proposal.getPrice(), proposal.getStatus(),
                             proposal.getCreatedDate(),
                             proposal.getDocumentLinks() != null
                                     && !proposal.getDocumentLinks().isEmpty()
                                             ? proposal.getDocumentLinks().toArray(new String[0])
-                                            : null)
+                                            : null,
+                            proposal.getAiScore())
                     .update();
             return "Proposal created successfully";
         } catch (Exception e) {
@@ -63,14 +67,14 @@ public class ProposalRepository {
         try {
             int rowsAffected = jdbcClient
                     .sql("UPDATE proposal SET tender_id = ?, author_id = ?, title = ?, "
-                            + "description = ?, price = ?, status = ?, documents_links = ? WHERE proposal_id = ?")
+                            + "description = ?, price = ?, status = ?, documents_links = ?, ai_score = ? WHERE proposal_id = ?")
                     .params(proposal.getTenderId(), proposal.getAuthorId(), proposal.getTitle(),
                             proposal.getDescription(), proposal.getPrice(), proposal.getStatus(),
                             proposal.getDocumentLinks() != null
                                     && !proposal.getDocumentLinks().isEmpty()
                                             ? proposal.getDocumentLinks().toArray(new String[0])
                                             : null,
-                            proposal.getProposalId())
+                            proposal.getAiScore(), proposal.getProposalId())
                     .update();
 
             if (rowsAffected > 0) {
@@ -160,6 +164,22 @@ public class ProposalRepository {
             }
         } catch (Exception e) {
             return "Error removing document link: " + e.getMessage();
+        }
+    }
+
+    public String updateAiScore(int proposalId, int aiScore) {
+        try {
+            int rowsAffected =
+                    jdbcClient.sql("UPDATE proposal SET ai_score = ? WHERE proposal_id = ?")
+                            .params(aiScore, proposalId).update();
+
+            if (rowsAffected > 0) {
+                return "AI score updated successfully";
+            } else {
+                return "Proposal not found";
+            }
+        } catch (Exception e) {
+            return "Error updating AI score: " + e.getMessage();
         }
     }
 }
