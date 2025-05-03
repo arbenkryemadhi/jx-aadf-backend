@@ -59,8 +59,7 @@ public class TenderController {
     }
 
     @PutMapping("/makewinner")
-    public void makeWinner(@RequestHeader int tenderId,
-            @RequestHeader(value = "proposalId") int proposalId) {
+    public void makeWinner(@RequestHeader int tenderId, @RequestHeader int proposalId) {
         tenderRepository.makeWinner(tenderId, proposalId);
     }
 
