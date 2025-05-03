@@ -119,5 +119,4 @@ public class TenderController {
         return tenderRepository.getNumberOfEndedTenders();
     }
 
-
 }
