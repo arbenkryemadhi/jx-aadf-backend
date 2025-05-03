@@ -29,4 +29,10 @@ public class StaffRepository {
         String sql = "INSERT INTO staff (staff_email) VALUES (?)";
         jdbcClient.sql(sql).params(email).update();
     }
+
+
+    public void removeStaff(String email) {
+        String sql = "DELETE FROM staff WHERE staff_email = ?";
+        jdbcClient.sql(sql).params(email).update();
+    }
 }

@@ -1,6 +1,7 @@
 package com.arben.jxaadf.staff;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,5 +36,10 @@ public class StaffController {
         staffRepository.createStaff(email);
     }
 
+
+    @DeleteMapping("/removestaff")
+    public void removeStaff(@RequestParam String email) {
+        staffRepository.removeStaff(email);
+    }
 
 }
