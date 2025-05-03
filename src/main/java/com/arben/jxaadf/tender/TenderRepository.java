@@ -158,4 +158,19 @@ public class TenderRepository {
         String sql = "SELECT * FROM tender WHERE ? = ANY(assigned_aadf_staff)";
         return jdbcClient.sql(sql).param(staffId).query(tenderRowMapper).list();
     }
+
+    public Double getTotalTendersValue() {
+        String sql = "SELECT SUM(budget) FROM tender";
+        return jdbcClient.sql(sql).query(Double.class).single();
+    }
+
+    public int getNumberOfActiveTenders() {
+        String sql = "SELECT COUNT(*) FROM tender WHERE status = 'Active'";
+        return jdbcClient.sql(sql).query(Integer.class).single();
+    }
+
+    public int getNumberOfCompletedTenders() {
+        String sql = "SELECT COUNT(*) FROM tender WHERE status = 'Ended'";
+        return jdbcClient.sql(sql).query(Integer.class).single();
+    }
 }

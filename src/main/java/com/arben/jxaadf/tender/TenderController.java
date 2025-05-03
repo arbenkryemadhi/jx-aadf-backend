@@ -87,4 +87,22 @@ public class TenderController {
     public List<Tender> getTendersByStaffId(@RequestParam String staffId) {
         return tenderRepository.getTendersByStaffId(staffId);
     }
+
+    @GetMapping("/totatenderslvalue")
+    public Double getTotalTendersValue() {
+        return tenderRepository.getTotalTendersValue();
+    }
+
+
+    @GetMapping("/getnumberofactivetenders")
+    public int getNumberOfActiveTenders() {
+        return tenderRepository.getNumberOfActiveTenders();
+    }
+
+    @GetMapping("/getnumberofendedtenders")
+    public int getNumberOfCompletedTenders() {
+        return tenderRepository.getNumberOfCompletedTenders();
+    }
+
+
 }
