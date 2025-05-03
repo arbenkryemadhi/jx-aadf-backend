@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.arben.jxaadf.appuser.AppUser;
+import com.arben.jxaadf.appuser.AppUserRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +20,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TenderController {
 
     private final TenderRepository tenderRepository;
+    private final AppUserRepository appUserRepository;
 
-    public TenderController(TenderRepository tenderRepository) {
+    public TenderController(TenderRepository tenderRepository,
+            AppUserRepository appUserRepository) {
+
         this.tenderRepository = tenderRepository;
+        this.appUserRepository = appUserRepository;
     }
 
     @PostMapping("/create")
@@ -75,6 +81,13 @@ public class TenderController {
 
     @PutMapping("/addstaff")
     public void addStaffToTender(@RequestHeader int tenderId, @RequestHeader String staffId) {
+        tenderRepository.addStaffToTender(tenderId, staffId);
+    }
+
+    // EMAIL
+    @PutMapping("/addstaffemal")
+    public void addStaffToTenderByEmail(@RequestHeader int tenderId, @RequestHeader String email) {
+        String staffId = appUserRepository.getIdFromEmail(email);
         tenderRepository.addStaffToTender(tenderId, staffId);
     }
 

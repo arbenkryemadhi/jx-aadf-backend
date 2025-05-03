@@ -17,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.arben.jxaadf.appuser.AppUserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(TenderController.class)
@@ -27,6 +28,9 @@ public class TenderControllerTest {
 
     @MockBean
     private TenderRepository tenderRepository;
+
+    @MockBean
+    private AppUserRepository appUserRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -233,5 +237,38 @@ public class TenderControllerTest {
         // Act & Assert
         mockMvc.perform(post("/api/tender/create").contentType(MediaType.APPLICATION_JSON)
                 .content(invalidJson)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void addStaffToTenderByEmail_ShouldAddStaffToTender() throws Exception {
+        // Arrange
+        String email = "staff@example.com";
+        String staffId = "staff123";
+        when(appUserRepository.getIdFromEmail(email)).thenReturn(staffId);
+        doNothing().when(tenderRepository).addStaffToTender(anyInt(), anyString());
+
+        // Act & Assert
+        mockMvc.perform(
+                put("/api/tender/addstaffemal").header("tenderId", "1").header("email", email))
+                .andExpect(status().isOk());
+
+        verify(appUserRepository, times(1)).getIdFromEmail(email);
+        verify(tenderRepository, times(1)).addStaffToTender(1, staffId);
+    }
+
+
+
+    @Test
+    void addStaffToTenderByEmail_WithEmptyEmail_ShouldHandleValidation() throws Exception {
+        // Arrange
+        String email = "";
+
+        // Act & Assert
+        mockMvc.perform(
+                put("/api/tender/addstaffemal").header("tenderId", "1").header("email", email))
+                .andExpect(status().isOk()); // Without explicit validation, empty header is
+                                             // permitted
+
+        verify(appUserRepository, times(1)).getIdFromEmail(email);
     }
 }
