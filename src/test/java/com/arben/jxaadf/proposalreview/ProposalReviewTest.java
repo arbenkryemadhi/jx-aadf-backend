@@ -23,10 +23,11 @@ public class ProposalReviewTest {
         String title = "Test Review";
         String description = "This is a test review";
         String createdDate = "2025-05-01";
+        int humanScore = 85;
 
         // Act
         ProposalReview proposalReview = new ProposalReview(proposalReviewId, proposalId, authorId,
-                title, description, createdDate);
+                title, description, createdDate, humanScore);
 
         // Assert
         assertEquals(proposalReviewId, proposalReview.getProposalReviewId());
@@ -35,6 +36,7 @@ public class ProposalReviewTest {
         assertEquals(title, proposalReview.getTitle());
         assertEquals(description, proposalReview.getDescription());
         assertEquals(createdDate, proposalReview.getCreatedDate());
+        assertEquals(humanScore, proposalReview.getHumanScore());
     }
 
     @Test
@@ -47,6 +49,7 @@ public class ProposalReviewTest {
         String title = "Test Review";
         String description = "This is a test review";
         String createdDate = "2025-05-01";
+        int humanScore = 90;
 
         // Act
         proposalReview.setProposalReviewId(proposalReviewId);
@@ -55,6 +58,7 @@ public class ProposalReviewTest {
         proposalReview.setTitle(title);
         proposalReview.setDescription(description);
         proposalReview.setCreatedDate(createdDate);
+        proposalReview.setHumanScore(humanScore);
 
         // Assert
         assertEquals(proposalReviewId, proposalReview.getProposalReviewId());
@@ -63,5 +67,19 @@ public class ProposalReviewTest {
         assertEquals(title, proposalReview.getTitle());
         assertEquals(description, proposalReview.getDescription());
         assertEquals(createdDate, proposalReview.getCreatedDate());
+        assertEquals(humanScore, proposalReview.getHumanScore());
+    }
+
+    @Test
+    public void testHumanScoreGetterSetter() {
+        // Arrange
+        ProposalReview proposalReview = new ProposalReview();
+        int humanScore = 95;
+
+        // Act
+        proposalReview.setHumanScore(humanScore);
+
+        // Assert
+        assertEquals(humanScore, proposalReview.getHumanScore());
     }
 }

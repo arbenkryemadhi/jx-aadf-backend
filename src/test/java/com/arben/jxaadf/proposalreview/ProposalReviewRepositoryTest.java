@@ -28,7 +28,7 @@ public class ProposalReviewRepositoryTest {
     void setUp() {
         proposalReviewRepository = new ProposalReviewRepository(jdbcClient);
         testProposalReview = new ProposalReview(1, 2, "user123", "Test Review",
-                "This is a test review", "2025-05-01");
+                "This is a test review", "2025-05-01", 85);
     }
 
     @Test
@@ -131,6 +131,23 @@ public class ProposalReviewRepositoryTest {
     }
 
     @Test
+    void updateHumanScore_VerifySqlExecution() {
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        int proposalReviewId = 1;
+        int humanScore = 90;
+
+        try {
+            proposalReviewRepository.updateHumanScore(proposalReviewId, humanScore);
+        } catch (NullPointerException e) {
+            verify(jdbcClient).sql(sqlCaptor.capture());
+            String capturedSql = sqlCaptor.getValue();
+
+            assertTrue(capturedSql.contains("UPDATE proposal_review SET human_score = ?"));
+            assertTrue(capturedSql.contains("WHERE proposal_review_id = ?"));
+        }
+    }
+
+    @Test
     void verifySqlQueries_AllMethods() {
         // We use an ArgumentCaptor to capture all SQL query strings from all methods
         ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
@@ -140,7 +157,7 @@ public class ProposalReviewRepositoryTest {
         executeAllRepositoryMethodsWithExceptionHandling();
 
         // Verify the SQL queries
-        verify(jdbcClient, atLeast(6)).sql(sqlCaptor.capture());
+        verify(jdbcClient, atLeast(7)).sql(sqlCaptor.capture());
 
         // Get the captured values
         var capturedQueries = sqlCaptor.getAllValues();
@@ -158,6 +175,8 @@ public class ProposalReviewRepositoryTest {
                 sql -> sql.contains("SELECT * FROM proposal_review WHERE proposal_id = ?")));
         assertTrue(capturedQueries.stream().anyMatch(
                 sql -> sql.contains("SELECT * FROM proposal_review WHERE author_id = ?")));
+        assertTrue(capturedQueries.stream()
+                .anyMatch(sql -> sql.contains("UPDATE proposal_review SET human_score = ?")));
     }
 
     private void executeAllRepositoryMethodsWithExceptionHandling() {
@@ -183,6 +202,10 @@ public class ProposalReviewRepositoryTest {
         }
         try {
             proposalReviewRepository.getAllProposalReviewsOfUser("user123");
+        } catch (Exception e) {
+        }
+        try {
+            proposalReviewRepository.updateHumanScore(1, 90);
         } catch (Exception e) {
         }
     }

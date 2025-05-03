@@ -16,11 +16,11 @@ public class ProposalReviewRepository {
     public String createProposalReview(ProposalReview proposalReview) {
         try {
             jdbcClient.sql(
-                    "INSERT INTO proposal_review (proposal_id, author_id, title, description, created_date) "
-                            + "VALUES (?, ?, ?, ?, ?)")
+                    "INSERT INTO proposal_review (proposal_id, author_id, title, description, created_date, human_score) "
+                            + "VALUES (?, ?, ?, ?, ?, ?)")
                     .params(proposalReview.getProposalId(), proposalReview.getAuthorId(),
                             proposalReview.getTitle(), proposalReview.getDescription(),
-                            proposalReview.getCreatedDate())
+                            proposalReview.getCreatedDate(), proposalReview.getHumanScore())
                     .update();
             return "Proposal review created successfully";
         } catch (Exception e) {
@@ -31,11 +31,12 @@ public class ProposalReviewRepository {
     public String updateProposalReview(ProposalReview proposalReview) {
         try {
             int rowsAffected = jdbcClient.sql("UPDATE proposal_review SET "
-                    + "proposal_id = ?, author_id = ?, title = ?, description = ?, created_date = ? "
+                    + "proposal_id = ?, author_id = ?, title = ?, description = ?, created_date = ?, human_score = ? "
                     + "WHERE proposal_review_id = ?")
                     .params(proposalReview.getProposalId(), proposalReview.getAuthorId(),
                             proposalReview.getTitle(), proposalReview.getDescription(),
-                            proposalReview.getCreatedDate(), proposalReview.getProposalReviewId())
+                            proposalReview.getCreatedDate(), proposalReview.getHumanScore(),
+                            proposalReview.getProposalReviewId())
                     .update();
 
             if (rowsAffected > 0) {
@@ -69,7 +70,8 @@ public class ProposalReviewRepository {
                 .param(proposalReviewId)
                 .query((rs, rowNum) -> new ProposalReview(rs.getInt("proposal_review_id"),
                         rs.getInt("proposal_id"), rs.getString("author_id"), rs.getString("title"),
-                        rs.getString("description"), rs.getString("created_date")))
+                        rs.getString("description"), rs.getString("created_date"),
+                        rs.getInt("human_score")))
                 .optional().orElse(null);
     }
 
@@ -78,7 +80,8 @@ public class ProposalReviewRepository {
                 .param(proposalId)
                 .query((rs, rowNum) -> new ProposalReview(rs.getInt("proposal_review_id"),
                         rs.getInt("proposal_id"), rs.getString("author_id"), rs.getString("title"),
-                        rs.getString("description"), rs.getString("created_date")))
+                        rs.getString("description"), rs.getString("created_date"),
+                        rs.getInt("human_score")))
                 .list();
     }
 
@@ -86,7 +89,24 @@ public class ProposalReviewRepository {
         return jdbcClient.sql("SELECT * FROM proposal_review WHERE author_id = ?").param(userId)
                 .query((rs, rowNum) -> new ProposalReview(rs.getInt("proposal_review_id"),
                         rs.getInt("proposal_id"), rs.getString("author_id"), rs.getString("title"),
-                        rs.getString("description"), rs.getString("created_date")))
+                        rs.getString("description"), rs.getString("created_date"),
+                        rs.getInt("human_score")))
                 .list();
+    }
+
+    public String updateHumanScore(int proposalReviewId, int humanScore) {
+        try {
+            int rowsAffected = jdbcClient
+                    .sql("UPDATE proposal_review SET human_score = ? WHERE proposal_review_id = ?")
+                    .params(humanScore, proposalReviewId).update();
+
+            if (rowsAffected > 0) {
+                return "Human score updated successfully";
+            } else {
+                return "No proposal review found with id: " + proposalReviewId;
+            }
+        } catch (Exception e) {
+            return "Error updating human score: " + e.getMessage();
+        }
     }
 }

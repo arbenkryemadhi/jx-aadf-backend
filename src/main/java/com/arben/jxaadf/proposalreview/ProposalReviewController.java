@@ -50,4 +50,9 @@ public class ProposalReviewController {
     public List<ProposalReview> getAllProposalReviewsOfUser(@RequestParam String userId) {
         return proposalReviewRepository.getAllProposalReviewsOfUser(userId);
     }
+
+    @PutMapping("/addhumanscore")
+    public String addHumanScore(@RequestParam int proposalReviewId, @RequestParam int humanScore) {
+        return proposalReviewRepository.updateHumanScore(proposalReviewId, humanScore);
+    }
 }

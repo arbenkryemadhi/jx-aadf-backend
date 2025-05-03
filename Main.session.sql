@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS proposal_review (
     title TEXT NOT NULL,
     description TEXT NOT NULL,
     created_date TEXT NOT NULL,
+    human_score INT DEFAULT 0,
     FOREIGN KEY (proposal_id) REFERENCES proposal(proposal_id),
     FOREIGN KEY (author_id) REFERENCES app_user(app_user_id)
 );
