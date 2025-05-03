@@ -100,8 +100,8 @@ public class TenderController {
     }
 
     @GetMapping("/getnumberofendedtenders")
-    public int getNumberOfCompletedTenders() {
-        return tenderRepository.getNumberOfCompletedTenders();
+    public int getNumberOfEndedTenders() {
+        return tenderRepository.getNumberOfEndedTenders();
     }
 
 

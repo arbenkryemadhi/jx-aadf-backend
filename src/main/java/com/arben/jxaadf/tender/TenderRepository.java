@@ -169,7 +169,7 @@ public class TenderRepository {
         return jdbcClient.sql(sql).query(Integer.class).single();
     }
 
-    public int getNumberOfCompletedTenders() {
+    public int getNumberOfEndedTenders() {
         String sql = "SELECT COUNT(*) FROM tender WHERE status = 'Ended'";
         return jdbcClient.sql(sql).query(Integer.class).single();
     }
