@@ -182,4 +182,17 @@ public class ProposalRepository {
             return "Error updating AI score: " + e.getMessage();
         }
     }
+
+    public double getAverageScore(int proposalId) {
+        try {
+            return jdbcClient
+                    .sql("SELECT AVG(human_score) FROM proposal_review WHERE proposal_id = ?")
+                    .param(proposalId).query(Double.class).optional().orElse(0.0); // Return 0 if no
+                                                                                   // reviews exist
+        } catch (Exception e) {
+            // Log the exception
+            e.printStackTrace();
+            return 0.0; // Return 0 in case of error
+        }
+    }
 }

@@ -68,4 +68,9 @@ public class ProposalController {
         return proposalRepository.updateAiScore(proposalId, aiScore);
     }
 
+    @GetMapping("/averagescrore")
+    public double getAverageScore(@RequestParam int proposalId) {
+        return proposalRepository.getAverageScore(proposalId);
+    }
+
 }
